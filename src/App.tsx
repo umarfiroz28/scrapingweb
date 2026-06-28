@@ -1,16 +1,18 @@
 import {
+  AirVent,
   BatteryCharging,
+  Cable,
   CheckCircle2,
   ChevronRight,
   Clock3,
-  Fan,
   HelpCircle,
   ImagePlus,
   Laptop,
+  type LucideIcon,
   MapPin,
   MessageCircle,
-  PackageCheck,
   Phone,
+  Printer,
   Recycle,
   Send,
   ShieldCheck,
@@ -22,18 +24,18 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { hasSupabaseConfig, supabase } from "./lib/supabase";
 import { initTracking, trackLead } from "./lib/tracking";
 
-const phonePrimary = "7310886906";
-const phoneWhatsapp = import.meta.env.VITE_WHATSAPP_NUMBER || "918802227860";
+const phonePrimary = "8802227860";
+const phoneWhatsapp = import.meta.env.VITE_WHATSAPP_NUMBER || "8802227860";
 const whatsappLink = `https://wa.me/${phoneWhatsapp}?text=${encodeURIComponent(
   "Hi, I want doorstep scrap pickup with instant cash. Please share the best price.",
 )}`;
 
 const products = [
-  { title: "All Scrap", desc: "Mixed household, shop, office, and building scrap in any quantity.", icon: Recycle },
-  { title: "Old AC", desc: "Split, window, copper, compressor, indoor, and outdoor units.", icon: Fan },
-  { title: "Batteries", desc: "Inverter, car, UPS, e-rickshaw, and commercial batteries.", icon: BatteryCharging },
-  { title: "Electronics", desc: "Computers, laptops, wires, motors, panels, and appliances.", icon: Laptop },
-  { title: "Metal Scrap", desc: "Iron, steel, aluminium, brass, copper, and machinery scrap.", icon: PackageCheck },
+  { title: "AC", desc: "Split, window, copper coil, compressor, indoor, and outdoor units.", icon: AirVent, tone: "sky" },
+  { title: "Battery", desc: "Inverter, car, UPS, e-rickshaw, and commercial batteries.", icon: BatteryCharging, tone: "emerald" },
+  { title: "Laptop", desc: "Used, damaged, office, gaming, and dead laptops with accessories.", icon: Laptop, tone: "indigo" },
+  { title: "Computer Accessories", desc: "Keyboards, mice, cables, chargers, adapters, monitors, and parts.", icon: Cable, tone: "amber" },
+  { title: "Printers", desc: "Inkjet, laser, office, commercial, old, and non-working printers.", icon: Printer, tone: "rose" },
 ];
 
 const cities = ["Delhi", "Noida", "Ghaziabad", "Meerut", "Gurgaon", "Faridabad"];
@@ -75,7 +77,7 @@ const initialForm: LeadForm = {
   name: "",
   phone: "",
   city: "",
-  product_type: "All Scrap",
+  product_type: "AC",
   quantity: "1",
   product_age: "",
   image: null,
@@ -225,7 +227,7 @@ function App() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-14 pt-8 md:grid-cols-[1fr_.88fr] md:items-center md:pt-14">
           <div className="animate-rise">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
-              <Sparkles size={16} /> Any scrap, any quantity, picked from your doorstep
+              <Sparkles size={16} /> AC, battery, laptop, accessories, and printers picked from your doorstep
             </div>
             <h1 className="max-w-3xl text-4xl font-black leading-[1.05] tracking-normal text-ink sm:text-5xl md:text-6xl">
               Sell Every Kind of Scrap for Instant Cash
@@ -240,7 +242,7 @@ function App() {
               </a>
             </div>
             <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-slate-700">
-              {["Any quantity accepted", "Best market rates", "Instant cash"].map((item) => (
+              {["AC", "Battery", "Laptop", "Printers"].map((item) => (
                 <span key={item} className="pill">
                   <CheckCircle2 size={16} /> {item}
                 </span>
@@ -253,8 +255,10 @@ function App() {
             <div className="relative rounded-[2rem] border border-white bg-white/70 p-5 shadow-glow backdrop-blur-xl">
               <div className="rounded-[1.5rem] bg-gradient-to-br from-sky-100 via-white to-emerald-100 p-5">
                 <div className="grid grid-cols-2 gap-4">
-                  <VisualCard icon={Recycle} label="All Scrap" tone="blue" />
-                  <VisualCard icon={Truck} label="Doorstep" tone="green" />
+                  <VisualCard icon={AirVent} label="AC" tone="blue" />
+                  <VisualCard icon={BatteryCharging} label="Battery" tone="green" />
+                  <VisualCard icon={Laptop} label="Laptop" tone="purple" />
+                  <VisualCard icon={Printer} label="Printers" tone="amber" />
                   <div className="col-span-2 rounded-3xl bg-white p-4 shadow-lg">
                     <div className="flex items-center justify-between gap-4">
                       <div>
@@ -304,7 +308,7 @@ function App() {
             <p className="section-kicker">Fast lead form</p>
             <h2 className="section-title">Tell us what scrap you have. We call with the best price.</h2>
             <p className="mt-4 text-lg text-slate-600">
-              AC, battery, metal, electronics, wiring, office clear-out, home scrap, or mixed loads. Single item or bulk quantity, our team confirms the rate and pickup slot on call.
+              AC, battery, laptop, computer accessories, or printers. Single item or bulk quantity, our team confirms the rate and pickup slot on call.
             </p>
             <div className="mt-6 grid gap-3">
               <a className="contact-strip" href={`tel:${phonePrimary}`}>
@@ -368,7 +372,7 @@ function App() {
                   />
                 </Field>
                 <Field label="Condition / Notes">
-                  <input value={form.product_age} onChange={(e) => setForm({ ...form, product_age: e.target.value })} placeholder="Mixed scrap, 50 kg" />
+                  <input value={form.product_age} onChange={(e) => setForm({ ...form, product_age: e.target.value })} placeholder="Old split AC, working condition" />
                 </Field>
                 <label className="upload-field">
                   <ImagePlus size={20} />
@@ -404,11 +408,13 @@ function App() {
         </div>
       </Section>
 
-      <Section title="Scrap We Buy" kicker="Any quantity accepted">
+      <Section title="Scrap We Buy" kicker="Focused categories">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {products.map((product) => (
-            <article className="product-card" key={product.title}>
-              <product.icon size={34} />
+            <article className={`product-card product-card-${product.tone}`} key={product.title}>
+              <span className="product-icon">
+                <product.icon size={34} />
+              </span>
               <h3>{product.title}</h3>
               <p>{product.desc}</p>
               <a href="#quote">Get quote</a>
@@ -446,7 +452,7 @@ function App() {
             ["How much can I get for my scrap?", "The final price depends on material type, weight, condition, purity, and current market rate."],
             ["Do you provide free pickup?", "Yes, pickup is free in Delhi, Noida, Ghaziabad, Meerut, Gurgaon, and Faridabad."],
             ["How quickly do I get paid?", "Payment is made immediately after inspection and price approval."],
-            ["What scrap types do you purchase?", "We buy ACs, batteries, electronics, metal scrap, wiring, appliances, machinery, and mixed scrap loads."],
+            ["What scrap types do you purchase?", "We buy ACs, batteries, laptops, computer accessories, and printers."],
             ["Is inspection free?", "Yes, inspection is free. There is no hidden visit charge."],
           ].map(([q, a]) => (
             <details className="faq-card" key={q}>
@@ -463,7 +469,7 @@ function App() {
         <div className="mx-auto flex max-w-6xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-black">ScrappingWallah</h2>
-            <p className="mt-2 text-slate-300">Every kind of scrap. Free pickup. Instant cash.</p>
+            <p className="mt-2 text-slate-300">AC, battery, laptop, accessories, and printer pickup. Instant cash.</p>
           </div>
           <div className="grid gap-2 font-bold">
             <a href={`tel:${phonePrimary}`}>Call: {phonePrimary}</a>
@@ -499,11 +505,18 @@ function Section({ title, kicker, children }: { title: string; kicker: string; c
   );
 }
 
-function VisualCard({ icon: Icon, label, tone }: { icon: typeof Fan; label: string; tone: "blue" | "green" }) {
+function VisualCard({ icon: Icon, label, tone }: { icon: LucideIcon; label: string; tone: "blue" | "green" | "purple" | "amber" }) {
+  const toneClass = {
+    blue: "bg-ocean text-white",
+    green: "bg-mint text-ink",
+    purple: "bg-indigo-600 text-white",
+    amber: "bg-sun text-ink",
+  }[tone];
+
   return (
-    <div className={`rounded-3xl p-5 shadow-lg ${tone === "blue" ? "bg-ocean text-white" : "bg-mint text-ink"}`}>
-      <Icon size={58} />
-      <p className="mt-8 text-2xl font-black">{label}</p>
+    <div className={`rounded-3xl p-5 shadow-lg ${toneClass}`}>
+      <Icon size={48} />
+      <p className="mt-5 text-2xl font-black">{label}</p>
       <span className="text-sm font-bold opacity-80">Best price</span>
     </div>
   );

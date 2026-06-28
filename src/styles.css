@@ -141,8 +141,55 @@
   }
 
   .product-card {
-    @apply p-5 text-ocean transition hover:-translate-y-1 hover:border-emerald-200;
+    @apply relative overflow-hidden p-5 text-ink transition hover:-translate-y-1 hover:border-emerald-200;
     animation: soft-rise .65s ease-out both;
+  }
+
+  .product-card::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-1.5;
+    background: var(--product-accent, theme("colors.ocean"));
+  }
+
+  .product-card::after {
+    content: "";
+    @apply pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full opacity-10 transition;
+    background: var(--product-accent, theme("colors.ocean"));
+  }
+
+  .product-card:hover::after {
+    @apply opacity-20;
+    transform: scale(1.18);
+  }
+
+  .product-icon {
+    @apply grid h-16 w-16 place-items-center rounded-2xl text-white shadow-lg;
+    background: linear-gradient(135deg, var(--product-accent, theme("colors.ocean")), var(--product-soft, theme("colors.mint")));
+  }
+
+  .product-card-sky {
+    --product-accent: #0877ff;
+    --product-soft: #22d3ee;
+  }
+
+  .product-card-emerald {
+    --product-accent: #10b981;
+    --product-soft: #18d98b;
+  }
+
+  .product-card-indigo {
+    --product-accent: #4f46e5;
+    --product-soft: #38bdf8;
+  }
+
+  .product-card-amber {
+    --product-accent: #f59e0b;
+    --product-soft: #facc15;
+  }
+
+  .product-card-rose {
+    --product-accent: #e11d48;
+    --product-soft: #fb7185;
   }
 
   .product-card svg,
@@ -153,7 +200,8 @@
   }
 
   .product-card a {
-    @apply mt-4 inline-flex font-black text-emerald-700;
+    @apply mt-4 inline-flex font-black;
+    color: var(--product-accent, theme("colors.emerald.700"));
   }
 
   .testimonial-card {
